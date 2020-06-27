@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "duyguji-client-base",
+  "version": "${version}",
+
+  "name": "Duyguji",
+  "description": "Type unicode emojis in Minecraft using common messenger shortcodes.",
+  "authors": [
+    "Ancurio"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Sturmlilie/duyguji-client-base",
+    "sources": "https://github.com/Sturmlilie/duyguji-client-base"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/duyguji/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "ancurio.duyguji.client.ClientMain"
+    ]
+  },
+  "mixins": [
+    "duyguji-client-base.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.8.8",
+    "minecraft": "1.16.x"
+  }
+}

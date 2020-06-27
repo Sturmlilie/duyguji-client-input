@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ancurio.duyguji.client.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "MixinScreen",
+    "MixinChatScreen",
+    "MixinAnvilScreen",
+    "MixinTextFieldWidget"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
