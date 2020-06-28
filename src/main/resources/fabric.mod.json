@@ -29,5 +29,13 @@
   "depends": {
     "fabricloader": ">=0.8.8",
     "minecraft": "1.16.x"
+  },
+
+  "custom": {
+    "modupdater": {
+      "strategy": "github",
+      "owner": "Sturmlilie",
+      "repository": "duyguji-client-base"
+    }
   }
 }
