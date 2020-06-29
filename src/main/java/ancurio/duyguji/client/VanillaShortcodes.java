@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 import net.fabricmc.loader.launch.common.FabricLauncher;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 
-
 public class VanillaShortcodes {
     private static final Path EDITABLE_PARENT = Paths.get(ClientMain.getConfigPath());
     private static final String EDITABLE_FILENAME = "vanilla.txt";

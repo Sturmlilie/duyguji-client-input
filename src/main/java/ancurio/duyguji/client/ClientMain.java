@@ -11,9 +11,9 @@ public class ClientMain implements ClientModInitializer {
     public static final String MODID = "duyguji";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
-	public static void log(String str, Object ...arg) {
-		LOGGER.info("["+ MODID+ "] " + str, arg);
-	}
+    public static void log(String str, Object ...arg) {
+        LOGGER.info("["+ MODID+ "] " + str, arg);
+    }
 
     public static String getConfigPath() {
         return "config/" + MODID;

@@ -1,25 +1,13 @@
 package ancurio.duyguji.client;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.function.BiConsumer;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.StringRenderable;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
-
 import net.minecraft.client.gui.DrawableHelper;
-import java.util.List;
-import java.util.Collections;
-import java.util.Map;
+import net.minecraft.client.util.math.MatrixStack;
 
 public class AutocompleteWindow extends DrawableHelper {
     private final TextRenderer textRenderer;
