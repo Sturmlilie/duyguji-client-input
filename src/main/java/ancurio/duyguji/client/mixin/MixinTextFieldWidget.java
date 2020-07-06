@@ -62,6 +62,9 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
     @Inject(at = @At("HEAD"), method = "keyPressed(III)Z", cancellable = true)
     public void onKeyPressed(final int keyCode, final int scanCode, final int modifiers,
                              final CallbackInfoReturnable ci) {
+        if (!provideAutocomplete) {
+            return;
+        }
 
         switch (keyCode) {
             case GLFW.GLFW_KEY_LEFT:
@@ -79,21 +82,22 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
         switch (keyCode) {
             case GLFW.GLFW_KEY_UP:
             acData.moveSelection(-1);
+            ci.setReturnValue(true);
             break;
 
             case GLFW.GLFW_KEY_DOWN:
             acData.moveSelection(1);
+            ci.setReturnValue(true);
             break;
 
             case GLFW.GLFW_KEY_TAB:
             onTabPressed();
+            ci.setReturnValue(true);
             break;
 
             default:
             return;
         }
-
-        ci.setReturnValue(true);
     }
 
     @Inject(at = @At("RETURN"), method = "setCursor")
@@ -160,13 +164,15 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
         this.relativePos = pos;
     }
 
-    public void onTabPressed() {
+    public boolean onTabPressed() {
         if (!provideAutocomplete || !shouldShowSuggestions()) {
-            return;
+            return false;
         }
 
         applySuggestion(acData.selectedSymbol());
         acData = AutocompleteWindow.Data.EMPTY;
+
+        return true;
     }
 
     // Utility

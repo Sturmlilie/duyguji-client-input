@@ -28,7 +28,9 @@ public abstract class MixinScreen extends AbstractParentElement {
         }
 
         ExtTextFieldWidget ext = ExtTextFieldWidget.from(focused);
-        ext.onTabPressed();
-        ci.setReturnValue(true);
+
+        if (ext.onTabPressed()) {
+            ci.setReturnValue(true);
+        }
     }
 }

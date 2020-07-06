@@ -14,5 +14,6 @@ public interface ExtTextFieldWidget {
     void enableAutocomplete(final MinecraftClient client);
     void setAutocompleteOffset(final int x, final int y);
     void setAutocompletePosition(final AutocompleteWindow.Position pos);
-    void onTabPressed();
+    // Returns true if the key event was consumed
+    boolean onTabPressed();
 }

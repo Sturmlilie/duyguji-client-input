@@ -35,8 +35,10 @@ public class MixinChatScreen extends Screen {
                              final CallbackInfoReturnable ci) {
         if (keyCode == GLFW.GLFW_KEY_TAB) {
             ExtTextFieldWidget ext = ExtTextFieldWidget.from(this.chatField);
-            ext.onTabPressed();
-            ci.setReturnValue(true);
+
+            if (ext.onTabPressed()) {
+                ci.setReturnValue(true);
+            }
         }
     }
 }
