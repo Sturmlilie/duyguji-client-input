@@ -53,22 +53,25 @@ public class AutocompleteWindow extends DrawableHelper {
         final int textHeight = textRenderer.fontHeight;
         final int verticalPadding = 1;
         final int horizontalPadding = 2;
-        final int symbolAreaWidth = 12;
+        final int symbolAreaPadding = 4;
 
-        int maxSymbolWidth = 0;
+        int maxSymbolWidth = 10;
         int maxMnemonicWidth = 0;
 
         for (final Map.Entry<String, String> entry : data.suggestions) {
             final String mnemonic = entry.getKey();
+            final String symbol = entry.getValue();
             maxMnemonicWidth = Math.max(maxMnemonicWidth, textRenderer.getWidth(mnemonic));
+            maxSymbolWidth = Math.max(maxSymbolWidth, textRenderer.getWidth(symbol));
         }
 
         // ______________________
-        // |0| 1 |     2      |0|  <- entryWidth
+        // |0|1+2|     3      |0|  <- entryWidth
         //
         // 0: horizontalPadding
-        // 1: symbolAreaWidth
-        // 2: maxMnemonicWidth
+        // 1: maxSymbolWidth
+        // 2: symbolAreaPadding
+        // 3: maxMnemonicWidth
         //
         // ----------------------|
         //    verticalPadding    |
@@ -80,6 +83,7 @@ public class AutocompleteWindow extends DrawableHelper {
         //    verticalPadding    |
         // ----------------------|
 
+        final int symbolAreaWidth = symbolAreaPadding + maxSymbolWidth;
         final int entryWidth = horizontalPadding*2 + symbolAreaWidth + maxMnemonicWidth;
         final int entryHeight = verticalPadding*2 + textHeight;
         final int count = data.suggestions.size();
