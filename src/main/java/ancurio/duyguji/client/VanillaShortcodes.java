@@ -59,7 +59,7 @@ public class VanillaShortcodes {
     }
 
     private static Shortcode lineToCode(final String line) {
-        final int sepIndex = line.indexOf(CONFIG_SEPARATOR);
+        final int sepIndex = line.lastIndexOf(CONFIG_SEPARATOR);
 
         if (sepIndex == -1) {
             ClientMain.log("Rejecting [{}]: no slash", line);
