@@ -7,8 +7,12 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = "${project.mod_version}+${project.minecraft_version}"
 group = project.maven_group
+
+if (System.getenv("LOCAL_BUILD") != null)
+	version = "local.${System.getenv("LOCAL_BUILD")}"
+else
+	version = "${project.mod_version}+${project.minecraft_version}"
 
 minecraft {
 	refmapName = archivesBaseName + ".refmap.json"
@@ -36,7 +40,7 @@ processResources {
 
 	from(sourceSets.main.resources.srcDirs) {
 		include "fabric.mod.json"
-		expand "version": project.version
+		expand "version": project.mod_version
 	}
 
 	from(sourceSets.main.resources.srcDirs) {
