@@ -110,7 +110,7 @@ public class AutocompleteWindow extends DrawableHelper {
             final int symbolWidth = textRenderer.getWidth(symbol);
             final float symbolOffset = (symbolAreaWidth - symbolWidth) / 2.0f;
 
-            textRenderer.draw(matrices, symbol, symbolX + symbolOffset, y, symbolColor);
+            textRenderer.draw(matrices, symbol, symbolX + symbolOffset, y+1, symbolColor);
             textRenderer.draw(matrices, mnemonic, mnemonicX, y, mnemonicColor);
 
             i++;
