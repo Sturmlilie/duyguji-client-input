@@ -19,10 +19,6 @@ public class Shortcode {
         this.symbol = symbol;
     }
 
-    public String colonShortcode() {
-        return ":" + code + ":";
-    }
-
     private static Shortcode fromPairLine(final String line, final char separator) {
         final int sepIndex = line.lastIndexOf(separator);
 

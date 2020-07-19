@@ -29,7 +29,7 @@ public class ClientMain implements ClientModInitializer {
         shortcodes = new PatriciaTrie<String>();
 
         for (final Shortcode code : vanillaCodes) {
-            shortcodes.put(code.colonShortcode(), code.symbol);
+            shortcodes.put(":" + code.code + ":", code.symbol);
         }
 
         log("Vanilla shortcodes initialized");
