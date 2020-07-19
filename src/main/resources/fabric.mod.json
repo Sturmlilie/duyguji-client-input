@@ -14,7 +14,6 @@
   },
 
   "license": "LGPLv3",
-  "icon": "assets/duyguji/icon.png",
 
   "environment": "client",
   "entrypoints": {
