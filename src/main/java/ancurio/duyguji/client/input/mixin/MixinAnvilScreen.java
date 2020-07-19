@@ -1,6 +1,6 @@
-package ancurio.duyguji.client.mixin;
+package ancurio.duyguji.client.input.mixin;
 
-import ancurio.duyguji.client.ext.ExtTextFieldWidget;
+import ancurio.duyguji.client.input.ext.ExtTextFieldWidget;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;

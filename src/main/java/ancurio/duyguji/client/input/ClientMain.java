@@ -1,4 +1,4 @@
-package ancurio.duyguji.client;
+package ancurio.duyguji.client.input;
 
 import java.util.List;
 import net.fabricmc.api.ClientModInitializer;

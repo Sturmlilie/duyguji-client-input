@@ -1,8 +1,8 @@
-package ancurio.duyguji.client.mixin;
+package ancurio.duyguji.client.input.mixin;
 
-import ancurio.duyguji.client.AutocompleteWindow;
-import ancurio.duyguji.client.ClientMain;
-import ancurio.duyguji.client.ext.ExtTextFieldWidget;
+import ancurio.duyguji.client.input.AutocompleteWindow;
+import ancurio.duyguji.client.input.ClientMain;
+import ancurio.duyguji.client.input.ext.ExtTextFieldWidget;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;

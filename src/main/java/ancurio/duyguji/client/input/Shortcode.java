@@ -1,4 +1,4 @@
-package ancurio.duyguji.client;
+package ancurio.duyguji.client.input;
 
 public class Shortcode {
     // The shortcode (without enclosing colons!)

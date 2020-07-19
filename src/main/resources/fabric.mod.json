@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "duyguji-client-base",
+  "id": "duyguji-client-input",
   "version": "${version}",
 
   "name": "Duyguji",
@@ -9,8 +9,8 @@
     "Ancurio"
   ],
   "contact": {
-    "homepage": "https://github.com/Sturmlilie/duyguji-client-base",
-    "sources": "https://github.com/Sturmlilie/duyguji-client-base"
+    "homepage": "https://github.com/Sturmlilie/duyguji-client-input",
+    "sources": "https://github.com/Sturmlilie/duyguji-client-input"
   },
 
   "license": "LGPLv3",
@@ -19,11 +19,11 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "ancurio.duyguji.client.ClientMain"
+      "ancurio.duyguji.client.input.ClientMain"
     ]
   },
   "mixins": [
-    "duyguji-client-base.mixins.json"
+    "duyguji-client-input.mixins.json"
   ],
 
   "depends": {
@@ -35,7 +35,7 @@
     "modupdater": {
       "strategy": "github",
       "owner": "Sturmlilie",
-      "repository": "duyguji-client-base"
+      "repository": "duyguji-client-input"
     }
   }
 }

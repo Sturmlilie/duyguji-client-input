@@ -1,6 +1,6 @@
-package ancurio.duyguji.client.ext;
+package ancurio.duyguji.client.input.ext;
 
-import ancurio.duyguji.client.AutocompleteWindow;
+import ancurio.duyguji.client.input.AutocompleteWindow;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.TextFieldWidget;
