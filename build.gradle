@@ -1,3 +1,5 @@
+import net.fabricmc.loom.task.RemapJarTask
+
 plugins {
 	id 'fabric-loom' version '0.4-SNAPSHOT'
 	id 'maven-publish'
@@ -68,13 +70,27 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	from javadoc.destinationDir
 }
 
+task apiJar(type: Jar, dependsOn: classes) {
+    from sourceSets.main.output
+    classifier = 'api'
+    include 'ancurio/duyguji/client/input/api/**'
+}
+
+task remapApiJar(type: RemapJarTask, dependsOn: apiJar) {
+    input = apiJar.archiveFile.get().asFile
+    addNestedDependencies = true
+}
+
 artifacts {
 	archives javadocJar
+	archives apiJar
 }
 
 jar {
 	from "LICENSE"
 }
+
+tasks.assemble.dependsOn remapApiJar
 
 // configure the maven publication
 publishing {
@@ -87,12 +103,15 @@ publishing {
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
 			}
+			artifact(apiJar) {
+				builtBy remapApiJar
+			}
 		}
 	}
 
 	// select the repositories you want to publish to
 	repositories {
 		// uncomment to publish to the local maven
-		// mavenLocal()
+		mavenLocal()
 	}
 }
