@@ -16,7 +16,7 @@ import net.fabricmc.loader.launch.common.FabricLauncherBase;
 public class VanillaShortcodes {
     private static final Path EDITABLE_PARENT = Paths.get(ClientMain.getConfigPath());
     private static final String EDITABLE_FILENAME = "vanilla.txt";
-    private static final String DEFAULT_LOCATION = "assets/" + ClientMain.MODID + "/vanilla.txt";
+    private static final String DEFAULT_LOCATION = "assets/" + ClientMain.MODID + "/client/input/vanilla.txt";
     private static final char CONFIG_SEPARATOR = '/';
 
     public static List<Shortcode> read() {
