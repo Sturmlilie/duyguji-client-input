@@ -9,8 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import net.fabricmc.loader.launch.common.FabricLauncher;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 
@@ -35,10 +33,9 @@ public class VanillaShortcodes {
 
         final BufferedReader reader = Files.newBufferedReader(editablePath);
 
-        final List<Shortcode> codes = reader.lines()
-            .map(VanillaShortcodes::lineToCode)
-            .filter(x -> x != null)
-            .collect(Collectors.toList());
+        final List<Shortcode> codes = new ArrayList<Shortcode>();
+        Shortcode.readPairList(reader, CONFIG_SEPARATOR,
+            shortcode -> codes.add(shortcode));
 
         return codes;
     }
@@ -57,24 +54,5 @@ public class VanillaShortcodes {
         Files.copy(stream, path);
 
         return path;
-    }
-
-    private static Shortcode lineToCode(final String line) {
-        final int sepIndex = line.lastIndexOf(CONFIG_SEPARATOR);
-
-        if (sepIndex == -1) {
-            ClientMain.log("Rejecting [{}]: no slash", line);
-            return null;
-        }
-
-        final String symbol = line.substring(0, sepIndex);
-        final String code = line.substring(sepIndex+1, line.length());
-
-        if (symbol.isEmpty() || code.isEmpty()) {
-            ClientMain.log("Rejecting [{}]: symbol/code empty", line);
-            return null;
-        }
-
-        return new Shortcode(code, symbol);
     }
 }
