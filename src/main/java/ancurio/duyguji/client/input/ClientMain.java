@@ -1,5 +1,6 @@
 package ancurio.duyguji.client.input;
 
+import ancurio.duyguji.client.input.api.Shortcode;
 import java.util.List;
 import net.fabricmc.api.ClientModInitializer;
 import org.apache.commons.collections4.trie.PatriciaTrie;

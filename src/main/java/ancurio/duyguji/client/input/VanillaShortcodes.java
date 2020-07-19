@@ -1,5 +1,6 @@
 package ancurio.duyguji.client.input;
 
+import ancurio.duyguji.client.input.api.Shortcode;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.IOException;
