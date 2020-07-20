@@ -42,13 +42,11 @@ public class ClientMain implements ClientModInitializer {
     public void onInitializeClient() {
         log("Initializing vanilla shortcodes..");
 
-        final List<Shortcode> vanillaCodes = VanillaShortcodes.read();
-
         shortcodes = new PatriciaTrie<String>();
 
-        for (final Shortcode code : vanillaCodes) {
-            shortcodes.put(":" + code.code + ":", code.symbol);
-        }
+        VanillaShortcodes.read(
+            code -> shortcodes.put(":" + code.code + ":", code.symbol)
+        );
 
         log("done.");
 

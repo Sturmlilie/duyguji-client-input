@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Consumer;
 import net.fabricmc.loader.launch.common.FabricLauncher;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 
@@ -18,26 +17,21 @@ public class VanillaShortcodes {
     private static final String DEFAULT_LOCATION = "assets/" + ClientMain.MODID + "/client/input/vanilla.txt";
     private static final char CONFIG_SEPARATOR = '/';
 
-    public static List<Shortcode> read() {
+    public static void read(final Consumer<Shortcode> consumer) {
         try {
-            return readInternal();
+            readInternal(consumer);
         } catch (final IOException exc) {
             ClientMain.log("Error reading {}", EDITABLE_FILENAME);
             exc.printStackTrace();
-            return new ArrayList<Shortcode>();
         }
     }
 
-    private static List<Shortcode> readInternal() throws IOException {
+    private static void readInternal(final Consumer<Shortcode> consumer) throws IOException {
         final Path editablePath = getEditablePath();
 
         final BufferedReader reader = Files.newBufferedReader(editablePath);
 
-        final List<Shortcode> codes = new ArrayList<Shortcode>();
-        Shortcode.readPairList(reader, CONFIG_SEPARATOR,
-            shortcode -> codes.add(shortcode), ClientMain.commonLogger);
-
-        return codes;
+        Shortcode.readPairList(reader, CONFIG_SEPARATOR, consumer, ClientMain.commonLogger);
     }
 
     // Get a path to shortcodes in config/, creating the file from
