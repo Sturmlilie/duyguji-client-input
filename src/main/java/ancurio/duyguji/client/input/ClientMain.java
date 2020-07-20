@@ -31,6 +31,8 @@ public class ClientMain implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        log("Initializing vanilla shortcodes..");
+
         final List<Shortcode> vanillaCodes = VanillaShortcodes.read();
 
         shortcodes = new PatriciaTrie<String>();
@@ -39,6 +41,6 @@ public class ClientMain implements ClientModInitializer {
             shortcodes.put(":" + code.code + ":", code.symbol);
         }
 
-        log("Vanilla shortcodes initialized");
+        log("done.");
     }
 }
