@@ -1,5 +1,6 @@
 package ancurio.duyguji.client.input;
 
+import ancurio.duyguji.client.input.api.DuygujiLogger;
 import ancurio.duyguji.client.input.api.Shortcode;
 import java.util.List;
 import net.fabricmc.api.ClientModInitializer;
@@ -12,8 +13,14 @@ public class ClientMain implements ClientModInitializer {
     public static final String MODID = "duyguji";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
+    public final static DuygujiLogger commonLogger = new DuygujiLogger() {
+        public void log(String str, Object ...arg) {
+            LOGGER.info("["+ MODID+ "] " + str, arg);
+        }
+    };
+
     public static void log(String str, Object ...arg) {
-        LOGGER.info("["+ MODID+ "] " + str, arg);
+        commonLogger.log(str, arg);
     }
 
     public static String getConfigPath() {

@@ -35,7 +35,7 @@ public class VanillaShortcodes {
 
         final List<Shortcode> codes = new ArrayList<Shortcode>();
         Shortcode.readPairList(reader, CONFIG_SEPARATOR,
-            shortcode -> codes.add(shortcode));
+            shortcode -> codes.add(shortcode), ClientMain.commonLogger);
 
         return codes;
     }

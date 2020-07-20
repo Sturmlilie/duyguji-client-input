@@ -1,6 +1,5 @@
 package ancurio.duyguji.client.input.api;
 
-import ancurio.duyguji.client.input.ClientMain;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,11 +25,12 @@ public class Shortcode {
         this.symbol = symbol;
     }
 
-    private static Shortcode fromPairLine(final String line, final char separator) {
+    private static Shortcode fromPairLine(final String line, final char separator,
+                                          final DuygujiLogger logger) {
         final int sepIndex = line.lastIndexOf(separator);
 
         if (sepIndex == -1) {
-            ClientMain.log("Rejecting [{}]: no slash", line);
+            logger.log("Rejecting [{}]: no slash", line);
             return null;
         }
 
@@ -38,7 +38,7 @@ public class Shortcode {
         final String code = line.substring(sepIndex+1, line.length());
 
         if (symbol.isEmpty() || code.isEmpty()) {
-            ClientMain.log("Rejecting [{}]: symbol/code empty", line);
+            logger.log("Rejecting [{}]: symbol/code empty", line);
             return null;
         }
 
@@ -46,14 +46,16 @@ public class Shortcode {
     }
 
     /**
-     * @see Shortcode#readPairList(BufferedReader, char, Consumer)
+     * @see Shortcode#readPairList(BufferedReader, char, Consumer, DuygujiLogger)
      *
      * @param stream the input stream that lines are sourced from.
      * @param separator the separating character, only the last occurence in a line is considered.
      * @param consumer the callback receiving parsed Shortcodes.
+     * @param logger an optional logger for non-fatal parsing errors.
      */
-    public static void readPairList(final InputStream stream, final char separator, final Consumer<Shortcode> consumer) {
-        readPairList(new BufferedReader(new InputStreamReader(stream)), separator, consumer);
+    public static void readPairList(final InputStream stream, final char separator, final Consumer<Shortcode> consumer,
+                                    final DuygujiLogger logger) {
+        readPairList(new BufferedReader(new InputStreamReader(stream)), separator, consumer, logger);
     }
 
     /**
@@ -65,10 +67,22 @@ public class Shortcode {
      * @param reader the file / data stream that lines are sourced from.
      * @param separator the separating character, only the last occurence in a line is considered.
      * @param consumer the callback receiving parsed Shortcodes.
+     * @param logger an optional logger for non-fatal parsing errors.
      */
-    public static void readPairList(final BufferedReader reader, final char separator, final Consumer<Shortcode> consumer) {
+    public static void readPairList(final BufferedReader reader, final char separator, final Consumer<Shortcode> consumer,
+                                    final DuygujiLogger logger) {
+        // Pass a dummy logger if user provided null, so we only deal with this case once
+        final DuygujiLogger loggerImpl;
+        if (logger == null) {
+            loggerImpl = new DuygujiLogger() {
+                public void log(String str, Object ...arg) {}
+            };
+        } else {
+            loggerImpl = logger;
+        }
+
         reader.lines()
-            .map(l -> fromPairLine(l, separator))
+            .map(l -> fromPairLine(l, separator, loggerImpl))
             .filter(x -> x != null)
             .forEach(consumer);
     }
