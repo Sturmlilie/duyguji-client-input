@@ -1,9 +1,11 @@
 package ancurio.duyguji.client.input;
 
 import ancurio.duyguji.client.input.api.DuygujiLogger;
+import ancurio.duyguji.client.input.api.InputApiInitializer;
 import ancurio.duyguji.client.input.api.Shortcode;
 import java.util.List;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.collections4.trie.PatriciaTrie;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +31,13 @@ public class ClientMain implements ClientModInitializer {
 
     public static PatriciaTrie<String> shortcodes;
 
+    private static void initApi() {
+        final List<InputApiInitializer> initializers = FabricLoader.getInstance().getEntrypoints("duyguji:input", InputApiInitializer.class);
+        for (InputApiInitializer init : initializers) {
+            init.onInitialize(null);
+        }
+    }
+
     @Override
     public void onInitializeClient() {
         log("Initializing vanilla shortcodes..");
@@ -42,5 +51,7 @@ public class ClientMain implements ClientModInitializer {
         }
 
         log("done.");
+
+        initApi();
     }
 }

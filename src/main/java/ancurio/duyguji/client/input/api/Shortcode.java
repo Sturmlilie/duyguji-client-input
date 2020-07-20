@@ -1,12 +1,10 @@
 package ancurio.duyguji.client.input.api;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.function.Consumer;
 
 /**
- * In essence, this is an extended {@code Pair<String, String>}.
+ * Analogue to {@code Pair<String, String>}.
  */
 public class Shortcode {
     /**
@@ -46,25 +44,12 @@ public class Shortcode {
     }
 
     /**
-     * @see Shortcode#readPairList(BufferedReader, char, Consumer, DuygujiLogger)
-     *
-     * @param stream the input stream that lines are sourced from.
-     * @param separator the separating character, only the last occurence in a line is considered.
-     * @param consumer the callback receiving parsed Shortcodes.
-     * @param logger an optional logger for non-fatal parsing errors.
-     */
-    public static void readPairList(final InputStream stream, final char separator, final Consumer<Shortcode> consumer,
-                                    final DuygujiLogger logger) {
-        readPairList(new BufferedReader(new InputStreamReader(stream)), separator, consumer, logger);
-    }
-
-    /**
      * "Pair" referring to Shortcodes.
      * Reads a plain text stream where each line has the format {@code <symbol><separator><code>},
      * filtering out invalid lines, and feeds each successfully parsed Shortcode into
      * {@code consumer}.
      *
-     * @param reader the file / data stream that lines are sourced from.
+     * @param reader the file / data stream that lines are sourced from, opened in UTF-8 mode.
      * @param separator the separating character, only the last occurence in a line is considered.
      * @param consumer the callback receiving parsed Shortcodes.
      * @param logger an optional logger for non-fatal parsing errors.
