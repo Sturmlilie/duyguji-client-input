@@ -3,7 +3,6 @@
   "id": "duyguji-client-input",
   "version": "${version}",
 
-  "name": "Duyguji",
   "description": "Type unicode emojis in Minecraft using common messenger shortcodes.",
   "authors": [
     "Ancurio"
