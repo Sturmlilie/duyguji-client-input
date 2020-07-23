@@ -17,7 +17,7 @@ public abstract class MixinScreen extends AbstractParentElement {
     @Inject(at = @At("HEAD"), method = "keyPressed(III)Z", cancellable = true)
     public void onKeyPressed(final int keyCode, final int scanCode, final int modifiers,
                              final CallbackInfoReturnable ci) {
-        if (keyCode != GLFW.GLFW_KEY_TAB) {
+        if (!ExtTextFieldWidget.isAutocompleteKey(keyCode)) {
             return;
         }
 
@@ -29,7 +29,7 @@ public abstract class MixinScreen extends AbstractParentElement {
 
         ExtTextFieldWidget ext = ExtTextFieldWidget.from(focused);
 
-        if (ext.onTabPressed()) {
+        if (ext.onAcKeyPressed(keyCode)) {
             ci.setReturnValue(true);
         }
     }

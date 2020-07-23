@@ -75,6 +75,11 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
             break;
         }
 
+        if (ExtTextFieldWidget.isAutocompleteKey(keyCode) && onAcKeyPressed(keyCode)) {
+            ci.setReturnValue(true);
+            return;
+        }
+
         if (!shouldShowSuggestions()) {
             return;
         }
@@ -87,11 +92,6 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
 
             case GLFW.GLFW_KEY_DOWN:
             acData.moveSelection(1);
-            ci.setReturnValue(true);
-            break;
-
-            case GLFW.GLFW_KEY_TAB:
-            onTabPressed();
             ci.setReturnValue(true);
             break;
 
@@ -164,7 +164,7 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
         this.relativePos = pos;
     }
 
-    public boolean onTabPressed() {
+    public boolean onAcKeyPressed(int keyCode) {
         if (!provideAutocomplete || !shouldShowSuggestions()) {
             return false;
         }
