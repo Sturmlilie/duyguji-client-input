@@ -18,9 +18,9 @@ public class Shortcode {
      */
     public final String symbol;
 
-    public Shortcode(final String code, final String symbol) {
-        this.code = code;
+    public Shortcode(final String symbol, final String code) {
         this.symbol = symbol;
+        this.code = code;
     }
 
     private static void parsePairLine(final String line, final char separator, final BiConsumer<String, String> consumer,
