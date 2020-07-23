@@ -240,7 +240,11 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
 
         final int start = getStartOfHalfTypedWord(inputLine, cursor);
         final String halfWord = inputLine.substring(start, cursor);
-        final Map<String, String> view = ClientMain.storage.query(halfWord);
+
+        // Restore usage of dash as delimiter
+        final String query = halfWord.replace('-', '_');
+
+        final Map<String, String> view = ClientMain.storage.query(query);
 
         if (view.size() > 8) {
             return AutocompleteWindow.Data.EMPTY;
