@@ -8,7 +8,7 @@ import java.util.Collection;
  * {@code HashTable<Key, ListOfShortcodes>} on the input module's side.
  * Initially, the list represented is empty. To fill it,
  * first call {@code beginUpdate()}, which will implicitly clear any
- * previous entries. Then call {@code putEntry(Shortcode} with every
+ * previous entries. Then call {@code putEntry(symbol, code)} with every
  * shortcode you wish to register. Finish and commit the update with a
  * call to {@code endUpdate()}.
  * The implementation of the convenience method {@code update} provides
@@ -24,7 +24,7 @@ public interface ShortcodeList {
     default void update(final Collection<Shortcode> codes) {
         beginUpdate();
         for (final Shortcode sc : codes) {
-            putEntry(sc);
+            putEntry(sc.symbol, sc.code);
         }
         endUpdate();
     }
@@ -40,9 +40,10 @@ public interface ShortcodeList {
      * Calling this outside of a begin/end update cycle results in
      * undefined behavior
      *
-     * @param code the shortcode to append to the list.
+     * @param symbol the symbol or emoji represented by this shortcode.
+     * @param code the shortcode string, without surrounding colons.
      */
-    void putEntry(final Shortcode code);
+    void putEntry(final String symbol, final String code);
 
     /**
      * Signals the end of the update process. No more entries can be

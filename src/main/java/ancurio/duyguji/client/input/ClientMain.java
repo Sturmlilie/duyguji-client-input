@@ -47,7 +47,7 @@ public class ClientMain implements ClientModInitializer {
         vanillaList.beginUpdate();
 
         VanillaShortcodes.read(
-            code -> vanillaList.putEntry(code)
+            (symbol, code) -> vanillaList.putEntry(symbol, code)
         );
 
         vanillaList.endUpdate();

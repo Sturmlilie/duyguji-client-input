@@ -1,7 +1,7 @@
 package ancurio.duyguji.client.input.api;
 
 import java.io.BufferedReader;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * Analogue to {@code Pair<String, String>}.
@@ -23,13 +23,13 @@ public class Shortcode {
         this.symbol = symbol;
     }
 
-    private static Shortcode fromPairLine(final String line, final char separator,
-                                          final DuygujiLogger logger) {
+    private static void parsePairLine(final String line, final char separator, final BiConsumer<String, String> consumer,
+                                      final DuygujiLogger logger) {
         final int sepIndex = line.lastIndexOf(separator);
 
         if (sepIndex == -1) {
             logger.log("Rejecting [{}]: no slash", line);
-            return null;
+            return;
         }
 
         final String symbol = line.substring(0, sepIndex);
@@ -37,10 +37,10 @@ public class Shortcode {
 
         if (symbol.isEmpty() || code.isEmpty()) {
             logger.log("Rejecting [{}]: symbol/code empty", line);
-            return null;
+            return;
         }
 
-        return new Shortcode(code, symbol);
+        consumer.accept(symbol, code);
     }
 
     /**
@@ -51,10 +51,10 @@ public class Shortcode {
      *
      * @param reader the file / data stream that lines are sourced from, opened in UTF-8 mode.
      * @param separator the separating character, only the last occurence in a line is considered.
-     * @param consumer the callback receiving parsed Shortcodes.
+     * @param consumer the callback receiving parsed symbol/shortcode pairs.
      * @param logger an optional logger for non-fatal parsing errors.
      */
-    public static void readPairList(final BufferedReader reader, final char separator, final Consumer<Shortcode> consumer,
+    public static void readPairList(final BufferedReader reader, final char separator, final BiConsumer<String, String> consumer,
                                     final DuygujiLogger logger) {
         // Pass a dummy logger if user provided null, so we only deal with this case once
         final DuygujiLogger loggerImpl;
@@ -66,9 +66,6 @@ public class Shortcode {
             loggerImpl = logger;
         }
 
-        reader.lines()
-            .map(l -> fromPairLine(l, separator, loggerImpl))
-            .filter(x -> x != null)
-            .forEach(consumer);
+        reader.lines().forEach(line -> parsePairLine(line, separator, consumer, logger));
     }
 }
