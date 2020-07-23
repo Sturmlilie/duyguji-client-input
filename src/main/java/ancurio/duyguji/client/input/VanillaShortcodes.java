@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import net.fabricmc.loader.launch.common.FabricLauncher;
 import net.fabricmc.loader.launch.common.FabricLauncherBase;
 
@@ -17,7 +17,7 @@ public class VanillaShortcodes {
     private static final String DEFAULT_LOCATION = "assets/duyguji/client/input/vanilla.txt";
     private static final char CONFIG_SEPARATOR = '/';
 
-    public static void read(final Consumer<Shortcode> consumer) {
+    public static void read(final BiConsumer<String, String> consumer) {
         try {
             readInternal(consumer);
         } catch (final IOException exc) {
@@ -26,7 +26,7 @@ public class VanillaShortcodes {
         }
     }
 
-    private static void readInternal(final Consumer<Shortcode> consumer) throws IOException {
+    private static void readInternal(final BiConsumer<String, String> consumer) throws IOException {
         final Path editablePath = getEditablePath();
 
         final BufferedReader reader = Files.newBufferedReader(editablePath);

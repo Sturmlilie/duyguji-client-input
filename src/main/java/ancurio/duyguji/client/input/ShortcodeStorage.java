@@ -26,9 +26,9 @@ public class ShortcodeStorage implements ShortcodeListRegistry {
         }
 
         @Override
-        public void putEntry(final Shortcode sc) {
+        public void putEntry(final String symbol, final String code) {
             assert tempTrie != null;
-            tempTrie.put(":" + sc.code + ":", sc.symbol);
+            tempTrie.put(":" + code + ":", symbol);
         }
 
         @Override
