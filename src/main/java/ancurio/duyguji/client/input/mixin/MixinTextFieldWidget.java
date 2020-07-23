@@ -177,7 +177,7 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
 
     // Utility
     private void applySuggestion(final String symbol) {
-        final String inputLine = this.getText().trim();
+        final String inputLine = this.getText();
         final int cursor = this.getCursor();
 
         assert(atEndOfWord(inputLine, cursor));
@@ -231,7 +231,7 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
     }
 
     private AutocompleteWindow.Data updateAutocomplete() {
-        final String inputLine = this.getText().trim();
+        final String inputLine = this.getText();
         final int cursor = this.getCursor();
 
         if (!atEndOfWord(inputLine, cursor)) {
