@@ -11,13 +11,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ClientMain implements ClientModInitializer {
-    // Sharing this id for logging/etc between submods, don't :concern: me
-    public static final String MODID = "duyguji";
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static final String LOG_NAMESPACE = "duyguji:input";
+    public static final Logger LOGGER = LogManager.getLogger(LOG_NAMESPACE);
 
     public final static DuygujiLogger commonLogger = new DuygujiLogger() {
         public void log(String str, Object ...arg) {
-            LOGGER.info("["+ MODID+ "] " + str, arg);
+            LOGGER.info("["+ LOG_NAMESPACE+ "] " + str, arg);
         }
     };
 
@@ -26,7 +25,7 @@ public class ClientMain implements ClientModInitializer {
     }
 
     public static String getConfigPath() {
-        return "config/" + MODID;
+        return "config/duyguji";
     }
 
     public static PatriciaTrie<String> shortcodes;
