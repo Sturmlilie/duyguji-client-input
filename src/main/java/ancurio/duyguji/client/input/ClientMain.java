@@ -3,10 +3,11 @@ package ancurio.duyguji.client.input;
 import ancurio.duyguji.client.input.api.DuygujiLogger;
 import ancurio.duyguji.client.input.api.InputApiInitializer;
 import ancurio.duyguji.client.input.api.Shortcode;
+import ancurio.duyguji.client.input.api.ShortcodeList;
+import ancurio.duyguji.client.input.api.ShortcodeListRegistry;
 import java.util.List;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import org.apache.commons.collections4.trie.PatriciaTrie;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,12 +29,12 @@ public class ClientMain implements ClientModInitializer {
         return "config/duyguji";
     }
 
-    public static PatriciaTrie<String> shortcodes;
+    public static ShortcodeStorage storage;
 
-    private static void initApi() {
+    private static void initApi(final ShortcodeListRegistry registry) {
         final List<InputApiInitializer> initializers = FabricLoader.getInstance().getEntrypoints("duyguji:input", InputApiInitializer.class);
         for (InputApiInitializer init : initializers) {
-            init.onInitialize(null);
+            init.onInitialize(registry);
         }
     }
 
@@ -41,14 +42,17 @@ public class ClientMain implements ClientModInitializer {
     public void onInitializeClient() {
         log("Initializing vanilla shortcodes..");
 
-        shortcodes = new PatriciaTrie<String>();
+        storage = new ShortcodeStorage();
+        final ShortcodeList vanillaList = storage.register("minecraft", "mc");
+        vanillaList.beginUpdate();
 
         VanillaShortcodes.read(
-            code -> shortcodes.put(":" + code.code + ":", code.symbol)
+            code -> vanillaList.putEntry(code)
         );
 
+        vanillaList.endUpdate();
         log("done.");
 
-        initApi();
+        initApi(storage);
     }
 }

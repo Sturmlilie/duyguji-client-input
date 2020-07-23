@@ -240,7 +240,7 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
 
         final int start = getStartOfHalfTypedWord(inputLine, cursor);
         final String halfWord = inputLine.substring(start, cursor);
-        final Map<String, String> view = ClientMain.shortcodes.prefixMap(halfWord);
+        final Map<String, String> view = ClientMain.storage.query(halfWord);
 
         if (view.size() > 8) {
             return AutocompleteWindow.Data.EMPTY;
