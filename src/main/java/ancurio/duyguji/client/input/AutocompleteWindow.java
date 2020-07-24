@@ -26,10 +26,25 @@ public class AutocompleteWindow extends DrawableHelper {
     }
 
     public final static class Data {
-        public List<Map.Entry<String, String>> suggestions = Collections.emptyList();
-        public int selectionIndex = -1;
+        private List<Map.Entry<String, String>> suggestions;
+        private int selectionIndex = -1;
 
-        public static final Data EMPTY = new Data();
+        // How many entries are visible at once in a scrolled view?
+        private static final int SCROLL_VIEW_SIZE = 8;
+        // Shift between highest to lowest visible index
+        private static final int SCROLL_IDX_SHIFT = SCROLL_VIEW_SIZE-1;
+        // Lowest visible index in a scrolled view
+        private int scrollBase = 0;
+
+        public static final Data EMPTY = new Data(Collections.emptyList());
+
+        public Data(List<Map.Entry<String, String>> suggestions) {
+            this.suggestions = suggestions;
+        }
+
+        public boolean isEmpty() {
+            return suggestions.isEmpty();
+        }
 
         public void moveSelection(final int delta) {
             if (suggestions.size() == 0) {
@@ -38,10 +53,55 @@ public class AutocompleteWindow extends DrawableHelper {
 
             selectionIndex += (delta + suggestions.size());
             selectionIndex %= suggestions.size();
+
+            // Scrolling downwards, past the lower scroll view bound
+            if (delta > 0 && selectionIndex >= scrollBase + SCROLL_VIEW_SIZE) {
+                scrollBase = selectionIndex - SCROLL_IDX_SHIFT;
+            // Scrolling upwards, past the upper scroll view bound
+            } else if (delta < 0 && selectionIndex < scrollBase) {
+                scrollBase = selectionIndex;
+            // Scrolling downwards, past the lower limit and wrapping around
+            } else if (delta > 0 && selectionIndex < scrollBase) {
+                scrollBase = selectionIndex;
+            // Scrolling upwards, past the upper limit and wrapping around
+            } else if (delta < 0 && selectionIndex >= scrollBase + SCROLL_VIEW_SIZE) {
+                scrollBase = selectionIndex - SCROLL_IDX_SHIFT;
+            }
+        }
+
+        public void initSelectionIndex(final Position pos) {
+            // BELOW is not implemented yet
+            assert pos == Position.ABOVE;
+            selectionIndex = maxSelectionIndex();
+            scrollBase = Math.max(selectionIndex - SCROLL_IDX_SHIFT, 0);
         }
 
         public String selectedSymbol() {
             return suggestions.get(selectionIndex).getValue();
+        }
+
+        public boolean isScrolling() {
+            return suggestions.size() > SCROLL_VIEW_SIZE;
+        }
+
+        public int viewedEntryCount() {
+            return Math.min(suggestions.size(), SCROLL_VIEW_SIZE);
+        }
+
+        public int scrolledSelectionIndex() {
+            return selectionIndex - scrollBase;
+        }
+
+        public int maxSelectionIndex() {
+            return suggestions.size() - 1;
+        }
+
+        public boolean canScrollUpwards() {
+            return scrollBase > 0;
+        }
+
+        public boolean canScrollDownwards() {
+            return scrollBase + SCROLL_IDX_SHIFT < maxSelectionIndex();
         }
     };
 
@@ -54,6 +114,11 @@ public class AutocompleteWindow extends DrawableHelper {
         final int verticalPadding = 1;
         final int horizontalPadding = 2;
         final int symbolAreaPadding = 4;
+
+        final int scrollBarHeight = 6;
+        // Offset by which the normal, unscrolled view is shifted in
+        // y direction when scrolling is available
+        final int scrollYOffset = data.isScrolling() ? scrollBarHeight : 0;
 
         int maxSymbolWidth = 10;
         int maxMnemonicWidth = 0;
@@ -73,47 +138,78 @@ public class AutocompleteWindow extends DrawableHelper {
         // 2: symbolAreaPadding
         // 3: maxMnemonicWidth
         //
-        // ----------------------|
-        //    verticalPadding    |
-        // ----------------------|
-        //                       |
-        //       textHeight      | <- entryHeight
-        //                       |
-        // ----------------------|
-        //    verticalPadding    |
-        // ----------------------|
+        // ----------------------|  |
+        //    verticalPadding    |  |
+        // ----------------------|  |
+        //                       |  |
+        //       textHeight      |  |< entryHeight
+        //                       |  |
+        // ----------------------|  |
+        //    verticalPadding    |  |
+        // ----------------------|  |
+        //
+        //
+        // ________________________
+        //                         | <-- windowY (absolute position)
+        //     scrollYOffset (▲)   |
+        // ------------------------|
+        //  entryHeight (entry 0)  |
+        // ------------------------|
+        //           ...           |
+        // ------------------------|
+        // entryHeight (entry n-1) |
+        // ------------------------|
+        //     scrollYOffset (▼)   |
+        //                         | <-- windowYLower
+        // ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
         final int symbolAreaWidth = symbolAreaPadding + maxSymbolWidth;
         final int entryWidth = horizontalPadding*2 + symbolAreaWidth + maxMnemonicWidth;
         final int entryHeight = verticalPadding*2 + textHeight;
-        final int count = data.suggestions.size();
-        final int windowY = windowYLower - count*entryHeight;
+        final int count = data.viewedEntryCount();
+        final int windowY = windowYLower - count*entryHeight - scrollYOffset*2;
+
+        final int indicatorColor = 0xFFFFFFFF;
+
+        // Scroll indicators
+        if (data.canScrollUpwards()) {
+            final String indicator = "▲";
+            final int indicatorWidth = textRenderer.getWidth(indicator);
+            final float xOffset = (entryWidth - indicatorWidth) / 2.0f;
+            textRenderer.draw(matrices, indicator, windowX + xOffset, windowY, indicatorColor);
+        }
+
+        if (data.canScrollDownwards()) {
+            final String indicator = "▼";
+            final int indicatorWidth = textRenderer.getWidth(indicator);
+            final float xOffset = (entryWidth - indicatorWidth) / 2.0f;
+            textRenderer.draw(matrices, indicator, windowX + xOffset, windowYLower - scrollBarHeight, indicatorColor);
+        }
 
         // Background
         fill(matrices, windowX, windowY, windowX + entryWidth, windowYLower, bgColor);
 
         // Selection
-        final int y0 = windowY + data.selectionIndex*entryHeight;
+        final int y0 = windowY + data.scrolledSelectionIndex()*entryHeight + scrollYOffset;
         fill(matrices, windowX, y0 + entryHeight, windowX + entryWidth, y0, bgSelectionColor);
 
         final int symbolX = windowX + horizontalPadding;
         final int mnemonicX = symbolX + symbolAreaWidth;
         final int symbolColor = 0xFFFFFFFF;
         final int mnemonicColor = symbolColor;
-        int i = 0;
 
         // Suggestions
-        for (final Map.Entry<String, String> entry : data.suggestions) {
+        for (int i = 0; i < count; ++i) {
+            final Map.Entry<String, String> entry = data.suggestions.get(i + data.scrollBase);
+
             final String symbol = entry.getValue();
             final String mnemonic = entry.getKey();
-            final int y = windowY + i*entryHeight + verticalPadding;
+            final int y = windowY + i*entryHeight + verticalPadding + scrollYOffset;
             final int symbolWidth = textRenderer.getWidth(symbol);
             final float symbolOffset = (symbolAreaWidth - symbolWidth) / 2.0f;
 
             textRenderer.draw(matrices, symbol, symbolX + symbolOffset, y+1, symbolColor);
             textRenderer.draw(matrices, mnemonic, mnemonicX, y, mnemonicColor);
-
-            i++;
         }
     }
 }

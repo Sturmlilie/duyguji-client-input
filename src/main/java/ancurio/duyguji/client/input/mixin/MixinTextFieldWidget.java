@@ -246,7 +246,8 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
 
         final Map<String, String> view = ClientMain.storage.query(query);
 
-        if (view.size() > 8) {
+        // This max size is a cludge right now so we don't show suggestions yet for just ":"
+        if (view.size() > 256) {
             return AutocompleteWindow.Data.EMPTY;
         }
 
@@ -257,9 +258,8 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
             suggestions.add(entry);
         }
 
-        AutocompleteWindow.Data data = new AutocompleteWindow.Data();
-        data.suggestions = suggestions;
-        data.selectionIndex = suggestions.size()-1;
+        AutocompleteWindow.Data data = new AutocompleteWindow.Data(suggestions);
+        data.initSelectionIndex(relativePos);
 
         if (start > 0) {
             acWindowTextOffset = textRenderer.getWidth(inputLine.substring(0, start));
@@ -275,6 +275,6 @@ public abstract class MixinTextFieldWidget extends AbstractButtonWidget implemen
             return false;
         }
 
-        return !acData.suggestions.isEmpty();
+        return !acData.isEmpty();
     }
 }
